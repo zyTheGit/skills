@@ -1,0 +1,23 @@
+{
+  "skill_name": "daily-report",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "生成今天的日报",
+      "expected_output": "生成今天的工作日报，包含日期、提交汇总和可能的加班标记",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "生成 2026-04-09 的日报",
+      "expected_output": "生成指定日期的工作日报，正确处理该日期的提交记录",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "生成本周的日报，我的仓库在 /path/to/my-project",
+      "expected_output": "生成本周的工作日报，正确处理多天的提交汇总",
+      "files": []
+    }
+  ]
+}
