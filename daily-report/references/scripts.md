@@ -53,7 +53,7 @@ uv run python scripts/get_commits.py --since 2026-04-10 --until 2026-04-10 --rep
 检查节假日状态。
 
 ```bash
-uv run python scripts/check_holiday.py --date 2026-04-10 [--api-url https://...]
+UV run python scripts/check_holiday.py --date 2026-04-10 [--api-url https://...]
 ```
 
 **参数**：

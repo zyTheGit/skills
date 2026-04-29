@@ -64,7 +64,7 @@ DAILY_REPORT_CONFIG_DIR=~/.config/daily-report
   ],
   "output_file": "~/Desktop/工作内容.txt",
   "author": "your-name",
-  "holiday_api": "https://dateable.cn/holiday/info/",
+  "holiday_api": "https://timor.tech/api/holiday/info/",
   "default_content": "日常工作"
 }
 ```

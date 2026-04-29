@@ -19,7 +19,7 @@ def get_default_config() -> dict:
         "repos": [],
         "output_file": str(output_file),
         "author": None,
-        "holiday_api": "https://dateable.cn/holiday/info/",
+        "holiday_api": "https://timor.tech/api/holiday/info/",
         "default_content": "日常工作",
     }
 
