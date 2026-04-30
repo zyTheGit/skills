@@ -62,12 +62,17 @@ def clean_subject(subject: str) -> str:
     stripped = cleaned.strip()
     if stripped.lower() in ("tongbu", "1", "同步", ".", "..", ""):
         return ""
+    # 过滤 "Update xxx" 等纯文件更新提交
+    if re.match(r'^Update\s+\S', stripped, re.IGNORECASE):
+        return ""
     return stripped
 
 
 def extract_bug_numbers(subject: str) -> list[str]:
     """从提交信息中提取 BUG 编号列表"""
     numbers = []
+
+    # 原有模式：BUG123, bug123, 禅道123, #123
     for match in re.finditer(
         r'(?:BUG|bug|禅道)[#\-\s]*(\d+)|#(\d+)',
         subject
@@ -75,6 +80,18 @@ def extract_bug_numbers(subject: str) -> list[str]:
         num = match.group(1) or match.group(2)
         if num not in numbers:
             numbers.append(num)
+
+    # 新增：识别 fix: 后跟纯数字的 BUG 编号（如 fix: 3337、3480、3477）
+    # 同时支持中英文冒号，排除单数字的无效提交
+    fix_match = re.match(
+        r'^fix(?:\(.+?\))?[：:]\s*([\d、，,\s\-]+)$',
+        subject, re.IGNORECASE
+    )
+    if fix_match:
+        for num in re.findall(r'\d+', fix_match.group(1)):
+            if num not in numbers and len(num) >= 2:
+                numbers.append(num)
+
     return numbers
 
 
@@ -103,7 +120,14 @@ def summarize_commits(commits: list[dict]) -> list[str]:
         # 清洗提交信息
         cleaned = clean_subject(subject)
         if cleaned:
-            items.append(cleaned)
+            # 清洗后如果只剩下纯数字（如 "3504"、"3337、3480、3477"），归类为 BUG 编号
+            # 排除单数字的无效提交（如 fix: 1）
+            if re.match(r'^[\d、，,\s\-]+$', cleaned):
+                for num in re.findall(r'\d+', cleaned):
+                    if num not in all_bug_numbers and len(num) >= 2:
+                        all_bug_numbers.append(num)
+            else:
+                items.append(cleaned)
 
     # 简单去重（完全匹配），保持顺序
     seen = set()
