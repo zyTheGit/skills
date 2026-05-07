@@ -29,7 +29,7 @@ allowed-tools: Read Write Bash(uv:*) Bash(git:*)
 {
   "permission": {
     "external_directory": {
-      "~/.config/opencode/skill-config/daily-report/**": "allow",
+      "./skill-config/daily-report/**": "allow",
       "~/Desktop/**": "allow"
     }
   }
@@ -47,7 +47,7 @@ allowed-tools: Read Write Bash(uv:*) Bash(git:*)
 1. **命令行参数**：`--config-dir /path/to/config-dir`
 2. **系统环境变量**：`DAILY_REPORT_CONFIG_DIR`
 3. **.env 文件**：在 skill 目录创建 `.env` 文件，设置 `DAILY_REPORT_CONFIG_DIR=/path/to/config-dir`
-4. **默认位置**：`~/.config/opencode/skill-config/daily-report/config.json`
+4. **默认位置**：`./skill-config/daily-report/config.json`
 
 **.env 文件示例**（复制自 `.env.example`）：
 ```
