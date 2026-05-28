@@ -1,11 +1,11 @@
 ---
 name: pms-element-ui
-description: "PMS 内部组件库知识库。当用户提到 pms-base-element、BaseProTable、BaseProForm、BaseProSearch、BaseToolBar、BaseDictionary、BaseChunkUpload、BaseOrgantCascader 等业务组件时使用此技能。也适用于用户询问表格配置、表单配置、字典选择、文件上传、组织机构选择、工具栏配置、Min-Web3 SDK（window.$utils、window.$request、window.$permission、window.$eventBus）、权限控制、标签页管理等场景。"
+description: "PMS 内部组件库知识库。当用户提到 pms-base-element、BaseProTable、BaseProForm、BaseProSearch、BaseToolBar、BasePageFooter、BaseViewSwitcher、BaseDictionary、BaseChunkUpload、BaseOrgantCascader 等业务组件时使用此技能。也适用于用户询问表格配置、表单配置、字典选择、文件上传、组织机构选择、工具栏配置、底部操作栏、视图切换、Min-Web3 SDK（window.$utils、window.$request、window.$permission、window.$eventBus）、权限控制、标签页管理等场景。"
 ---
 
 # PMS 组件库知识库
 
-基于 pms-base-element 组件库的完整知识库，包含 86+ 组件的详细文档和代码示例。
+基于 pms-base-element 组件库的完整知识库，包含 88+ 组件的详细文档和代码示例。
 
 ---
 
@@ -16,7 +16,7 @@ description: "PMS 内部组件库知识库。当用户提到 pms-base-element、
 | 文档 | 说明 |
 |-----|------|
 | **[01-快速开始.md](./01-快速开始.md)** | 安装配置、Min-Web3 全局 SDK |
-| **[02-基础业务组件.md](./02-基础业务组件.md)** | 17个核心业务组件（重点）⭐ |
+| **[02-基础业务组件.md](./02-基础业务组件.md)** | 19个核心业务组件（重点）⭐ |
 | **[03-表单组件.md](./03-表单组件.md)** | 17个表单相关组件 |
 | **[04-数据展示组件.md](./04-数据展示组件.md)** | 19个数据展示组件 |
 | **[05-布局导航组件.md](./05-布局导航组件.md)** | 12个布局导航组件 |
@@ -179,4 +179,4 @@ window.$eventBus.emit('message:fromApp', {
 
 ---
 
-**最后更新时间**：2026-04-23
+**最后更新时间**：2026-05-13

@@ -147,6 +147,7 @@ def main():
     parser.add_argument("--since", help="开始日期 (YYYY-MM-DD)")
     parser.add_argument("--until", help="结束日期 (YYYY-MM-DD)")
     parser.add_argument("--force", action="store_true", help="强制覆盖已存在的日报")
+    parser.add_argument("--raw", action="store_true", help="输出原始提交数据 (JSON)，由 Claude 进行 AI 汇总")
 
     args = parser.parse_args()
 
@@ -190,11 +191,29 @@ def main():
 
     # 节假日判断
     is_holiday = check_holiday(since, config.get("holiday_api", ""))
-    if is_holiday and commits:
+    is_overtime = is_holiday and bool(commits)
+    if is_overtime:
         print("检测到节假日/周末加班")
 
-    # 格式化日报
     default_content = config.get("default_content", "日常工作")
+
+    # --raw 模式：输出结构化 JSON 供 Claude 自行汇总
+    if args.raw:
+        import json
+        raw_data = {
+            "date": since,
+            "since": since,
+            "until": until,
+            "is_holiday": is_holiday,
+            "is_overtime": is_overtime,
+            "has_commits": len(commits) > 0,
+            "default_content": default_content,
+            "commits": commits,
+        }
+        print(json.dumps(raw_data, ensure_ascii=False, indent=2))
+        return
+
+    # 格式化日报（规则式，传统模式）
     report = format_report(since, commits, is_holiday, default_content)
 
     print("\n生成的日报内容:")

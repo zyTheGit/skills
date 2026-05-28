@@ -15,11 +15,13 @@
 
 ### 二、核心业务组件
 
-- **[02-基础业务组件.md](./02-基础业务组件.md)** - 17个 base-* 开头的核心业务组件
+- **[02-基础业务组件.md](./02-基础业务组件.md)** - **19个** base-* 开头的核心业务组件
   - **高级表格** (BaseProTable) - 企业级表格解决方案
   - **高级表单** (BaseProForm) - 支持查看/新增/编辑模式
   - **高级搜索** (BaseProSearch) - 复杂搜索条件组合
   - **工具栏** (BaseToolBar) - 独立表格工具栏
+  - **底部操作栏** (BasePageFooter) - 表单/详情页底部操作区
+  - **视图切换** (BaseViewSwitcher) - card/table 视图切换
   - **流程组件** (BaseProProcess, BaseProcessHandle) - 流程审批
   - **选择器** (BaseOrgantCascader, BaseAffiliatedUnit, BaseDictionary) - 业务选择
   - **上传组件** (BaseChunkUpload, BaseUploadList) - 文件上传管理
@@ -80,6 +82,8 @@
 | **字典选择** | BaseDictionary |
 | **图片预览** | BaseImgPreviewer |
 | **文件预览** | BaseFilePreviewer |
+| **页面底部操作** | BasePageFooter |
+| **视图切换** | BaseViewSwitcher |
 
 ### 按功能类型查找
 
@@ -96,13 +100,13 @@
 
 ## 📊 组件统计
 
-- **总组件数**：86个
-- **业务组件**：17个 (19.8%)
-- **表单组件**：17个 (19.8%)
-- **数据展示**：19个 (22.1%)
-- **布局导航**：12个 (14.0%)
-- **反馈组件**：9个 (10.5%)
-- **其他组件**：12个 (14.0%)
+- **总组件数**：88个
+- **业务组件**：19个 (21.6%)
+- **表单组件**：17个 (19.3%)
+- **数据展示**：19个 (21.6%)
+- **布局导航**：12个 (13.6%)
+- **反馈组件**：9个 (10.2%)
+- **其他组件**：12个 (13.6%)
 
 ---
 
@@ -135,11 +139,20 @@
 
 ---
 
-**最后更新时间**：2026-04-23
+**最后更新时间**：2026-05-13
 
 ---
 
 ## 📝 更新日志
+
+### 2026-05-13
+- 新增：BasePageFooter 页面底部操作栏组件文档
+- 新增：BaseViewSwitcher 视图切换组件文档
+- 更新：BaseProTable 新增 single-selectable 单项禁用控制
+- 更新：BaseProProcess 新增 status-images、auto-load-logs、抽屉事件/方法、Slots
+- 更新：BaseProcessHandle 新增 footer-bleed、left-width 等属性及待办说明
+- 修正：02-基础业务组件.md 章节编号
+- 更新：组件总数 86→88
 
 ### 2026-04-23
 - 新增：BaseToolBar 工具栏组件文档
