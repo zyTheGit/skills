@@ -15,7 +15,7 @@
 
 ### 二、核心业务组件
 
-- **[02-基础业务组件.md](./02-基础业务组件.md)** - **19个** base-* 开头的核心业务组件
+- **[02-基础业务组件.md](./02-基础业务组件.md)** - **20个** base-* 开头的核心业务组件
   - **高级表格** (BaseProTable) - 企业级表格解决方案
   - **高级表单** (BaseProForm) - 支持查看/新增/编辑模式
   - **高级搜索** (BaseProSearch) - 复杂搜索条件组合
@@ -27,43 +27,40 @@
   - **上传组件** (BaseChunkUpload, BaseUploadList) - 文件上传管理
   - **预览器** (BaseImgPreviewer, BaseFilePreviewer) - 文件预览
   - **布局图标** (BaseLayout, BaseIcon) - 基础布局和图标
+  - **微前端保活** (MicroKeepAliveView) - 子应用页面缓存
 
 ### 三、基础组件库
 
-- **[03-表单组件.md](./03-表单组件.md)** - 17个表单相关组件
-  - Input、InputNumber、Select、Checkbox、Radio
-  - Switch、Slider、Rate、DatePicker、DateTimePicker
-  - TimePicker、ColorPicker、Upload、Transfer
-  - Cascader、Tree、Form
+- **[03-表单组件.md](./03-表单组件.md)** - **17个**表单相关组件（已完整收录）
+  - Form、Input、Select、DatePicker、Upload、Cascader
+  - InputNumber、Radio、Checkbox、Switch、TimePicker
+  - DateTimePicker、Rate、Slider、ColorPicker、Transfer
 
-- **[04-数据展示组件.md](./04-数据展示组件.md)** - 19个数据展示组件
-  - Table、Tag、Badge、Avatar、Card
-  - Carousel、Collapse、Descriptions、Empty、Image
-  - Pagination、Progress、Result、Skeleton、Statistic
-  - Timeline、Tooltip、Typography、Calendar
+- **[04-数据展示组件.md](./04-数据展示组件.md)** - **19个**数据展示组件（已完整收录）
+  - Table、Pagination、Tag、Card、Badge、Progress、Empty、Calendar
+  - Descriptions、Image、Carousel、Collapse、Timeline
+  - Statistic、Result、Skeleton、Tree
 
-- **[05-布局导航组件.md](./05-布局导航组件.md)** - 12个布局导航组件
-  - Layout、Container、Breadcrumb、Dropdown、Menu
-  - Tabs、Steps、PageHeader、Divider、Backtop
+- **[05-布局导航组件.md](./05-布局导航组件.md)** - **10个**布局导航组件
+  - Layout、Menu、Tabs、Breadcrumb、Steps
+  - Dropdown、PageHeader、Backtop、Container
 
-- **[06-反馈组件.md](./06-反馈组件.md)** - 9个反馈组件
-  - Alert、Dialog、Drawer、Loading
-  - Message、MessageBox、Notification
-  - Popover、Popconfirm
+- **[06-反馈组件.md](./06-反馈组件.md)** - **11个**反馈组件
+  - Dialog、Message、MessageBox、Notification、Drawer
+  - Loading、Alert、Popconfirm、Popover、Tooltip
 
-- **[07-其他组件.md](./07-其他组件.md)** - 4个其他组件
+- **[07-其他组件.md](./07-其他组件.md)** - **7个**其他组件
   - Button、Link、Icon、InfiniteScroll
+  - Avatar、Divider
 
 ### 四、主题和工具
 
 - **[08-主题和工具.md](./08-主题和工具.md)** - 主题定制和工具函数
-  - 色彩规范
-  - 边框样式
-  - 过渡动画
-  - 主题切换与定制
-  - 国际化
-  - 权限控制
-  - 工具函数库
+  - 色彩规范、边框样式、过渡动画
+  - 主题切换与定制、国际化
+  - 权限控制、工具函数库
+  - Typography 排版规范
+  - ThemeProvider 运行时主题切换
 
 ---
 
@@ -100,13 +97,13 @@
 
 ## 📊 组件统计
 
-- **总组件数**：88个
-- **业务组件**：19个 (21.6%)
-- **表单组件**：17个 (19.3%)
-- **数据展示**：19个 (21.6%)
-- **布局导航**：12个 (13.6%)
-- **反馈组件**：9个 (10.2%)
-- **其他组件**：12个 (13.6%)
+- **总组件数**：89个
+- **业务组件**：20个 (22.5%)
+- **表单组件**：17个 (19.1%)
+- **数据展示**：19个 (21.3%)
+- **布局导航**：12个 (13.5%)
+- **反馈组件**：9个 (10.1%)
+- **其他组件**：12个 (13.5%)
 
 ---
 
@@ -139,11 +136,26 @@
 
 ---
 
-**最后更新时间**：2026-05-13
+**最后更新时间**：2026-06-11
 
 ---
 
 ## 📝 更新日志
+
+### 2026-06-11
+- 新增：MicroKeepAliveView 微前端页签保活组件文档
+- 更新：Input 新增 trim 属性（自动清除输入值空格）
+- 更新：组件总数 88→89，业务组件 19→20
+
+### 2026-06-09
+- 增量更新：新增 26 个 Element 组件文档
+- 新增（表单）：InputNumber、Radio、Checkbox、Switch、TimePicker、DateTimePicker、Rate、Slider、ColorPicker、Transfer
+- 新增（数据展示）：Descriptions、Image、Carousel、Collapse、Timeline、Statistic、Result、Skeleton、Tree
+- 新增（布局）：Container
+- 新增（反馈）：Tooltip
+- 新增（其他）：Avatar、Divider
+- 新增（主题工具）：Typography 排版规范、ThemeProvider 运行时主题切换
+- 更新：03-表单组件 7→17 节，04-数据展示 9→18 节，05-布局导航 9→10 节，06-反馈 10→11 节，07-其他 5→7 节，08-主题工具 6→8 节
 
 ### 2026-05-13
 - 新增：BasePageFooter 页面底部操作栏组件文档

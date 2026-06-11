@@ -1,6 +1,6 @@
 ---
 name: pms-element-ui
-description: "PMS 内部组件库知识库。当用户提到 pms-base-element、BaseProTable、BaseProForm、BaseProSearch、BaseToolBar、BasePageFooter、BaseViewSwitcher、BaseDictionary、BaseChunkUpload、BaseOrgantCascader 等业务组件时使用此技能。也适用于用户询问表格配置、表单配置、字典选择、文件上传、组织机构选择、工具栏配置、底部操作栏、视图切换、Min-Web3 SDK（window.$utils、window.$request、window.$permission、window.$eventBus）、权限控制、标签页管理等场景。"
+description: "PMS 内部组件库知识库。当用户提到 pms-base-element、BaseProTable、BaseProForm、BaseProSearch、BaseToolBar、BasePageFooter、BaseViewSwitcher、BaseDictionary、BaseChunkUpload、BaseOrgantCascader、BaseTree、BaseImport、BaseImgPreviewer、BaseFilePreviewer、BaseLayout、BaseIcon、BaseUploadList、BaseProProcess、BaseProcessHandle、BaseAffiliatedUnit、MicroKeepAliveView 等业务组件时使用此技能。也适用于用户询问表格配置、表单配置、字典选择、文件上传、组织机构选择、工具栏配置、底部操作栏、视图切换、Min-Web3 SDK（window.$utils、window.$request、window.$permission、window.$eventBus）、权限控制、标签页管理、微前端保活、Descriptions 描述列表、Tooltip 文字提示、Avatar 头像、Divider 分割线、Container 布局容器、ThemeProvider 主题切换、Typography 排版规范等场景。"
 ---
 
 # PMS 组件库知识库
@@ -16,12 +16,12 @@ description: "PMS 内部组件库知识库。当用户提到 pms-base-element、
 | 文档 | 说明 |
 |-----|------|
 | **[01-快速开始.md](./01-快速开始.md)** | 安装配置、Min-Web3 全局 SDK |
-| **[02-基础业务组件.md](./02-基础业务组件.md)** | 19个核心业务组件（重点）⭐ |
-| **[03-表单组件.md](./03-表单组件.md)** | 17个表单相关组件 |
-| **[04-数据展示组件.md](./04-数据展示组件.md)** | 19个数据展示组件 |
-| **[05-布局导航组件.md](./05-布局导航组件.md)** | 12个布局导航组件 |
-| **[06-反馈组件.md](./06-反馈组件.md)** | 9个反馈组件 |
-| **[07-其他组件.md](./07-其他组件.md)** | 4个其他组件 |
+| **[02-基础业务组件.md](./02-基础业务组件.md)** | 20个核心业务组件（重点）⭐ |
+| **[03-表单组件.md](./03-表单组件.md)** | 17个表单相关组件（完整收录） |
+| **[04-数据展示组件.md](./04-数据展示组件.md)** | 19个数据展示组件（完整收录） |
+| **[05-布局导航组件.md](./05-布局导航组件.md)** | 10个布局导航组件 |
+| **[06-反馈组件.md](./06-反馈组件.md)** | 11个反馈组件 |
+| **[07-其他组件.md](./07-其他组件.md)** | 7个其他组件 |
 | **[08-主题和工具.md](./08-主题和工具.md)** | 主题定制、国际化、权限、工具函数 |
 
 ---
@@ -179,4 +179,4 @@ window.$eventBus.emit('message:fromApp', {
 
 ---
 
-**最后更新时间**：2026-05-13
+**最后更新时间**：2026-06-11

@@ -146,7 +146,7 @@ ls C:\zy\project\nfdw\pms-base-element\examples\docs\zh-CN\*.md
 ### 查看知识库文件
 
 ```bash
-ls C:\Users\hpee2\.config\opencode\skills\pms-element-ui\
+ls ../pms-element-ui/
 ```
 
 ### 对比文档数量
