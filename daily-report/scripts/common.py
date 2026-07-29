@@ -127,10 +127,16 @@ def clean_subject(subject: str) -> str:
     cleaned = re.sub(
         r'\s*(?:BUG|bug|禅道)[#\-\s]*\d+\s*', ' ', cleaned, flags=re.IGNORECASE
     )
+    # 先移除 [type](scope)[：:] 整体前缀（如 [fix](planner): xxx），避免拆散
+    cleaned = re.sub(r"^\[\w+\]\([\w\s\-]+\)\s*[：:]?\s*", "", cleaned)
     # 移除 ticket/issue 编号
     cleaned = re.sub(r"\s*#\d+\s*", " ", cleaned)
     cleaned = re.sub(r"\s*\[[\w-]+\]\s*", " ", cleaned)
-    # 清理残留的分隔符（如 " - " 变成空格）
+    # 移除行首残留的 (scope) 标记
+    cleaned = re.sub(r"^\s*\([\w\s\-]+\)\s*", "", cleaned)
+    # 移除 (#pr) 等标记
+    cleaned = re.sub(r"\s*\(#\w+\)\s*", " ", cleaned)
+    # 清理残留的分隔符
     cleaned = re.sub(r'\s*[-:：]\s*', ' ', cleaned)
     # 压缩多余空格
     cleaned = re.sub(r'\s+', ' ', cleaned)
@@ -289,7 +295,7 @@ def format_report(
     按项目分类 → 相同类型合并 → BUG修复统一汇总
     """
     dt = datetime.strptime(date, "%Y-%m-%d")
-    date_str = f"{dt.year}年{dt.month}月{dt.day}日"
+    date_str = f"{dt.year}年{dt.month:02d}月{dt.day:02d}日"
 
     if is_holiday and commits:
         date_str += " （加班）"
@@ -313,9 +319,8 @@ def format_report(
 
     for idx, (repo_name, categories) in enumerate(grouped.items()):
         numeral = cn_numerals[idx] if idx < len(cn_numerals) else str(idx + 1)
-        lines.append(f"{numeral}、{repo_name}")
+        lines.append(f"\n{numeral}、{repo_name}")
 
-        # 按优先级排序类别
         sorted_cats = sorted(
             categories.keys(),
             key=lambda c: category_order.index(c) if c in category_order else 99,
@@ -323,13 +328,12 @@ def format_report(
 
         for cat in sorted_cats:
             items = categories[cat]
-            lines.append(f"  {cat}：")
-            for i, item in enumerate(items, 1):
-                lines.append(f"  {i}. {item}")
-            lines.append("")
+            # 合并同类项为一行，用；分隔
+            merged = f"{cat}：{'；'.join(items)}"
+            lines.append(f"  - {merged}")
 
     # 统一 BUG 修复汇总
     if bug_numbers:
-        lines.append(f"BUG修复：{', '.join(bug_numbers)}")
+        lines.append(f"\nBUG修复：{'、'.join(bug_numbers)}")
 
     return "\n".join(lines).strip()

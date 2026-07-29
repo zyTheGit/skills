@@ -133,7 +133,7 @@ def check_date_exists(date: str, output_path: str) -> bool:
     """检查指定日期的日报是否已存在"""
     from write_report import check_date_exists as _check
     dt = datetime.strptime(date, "%Y-%m-%d")
-    date_str = f"{dt.year}年{dt.month}月{dt.day}日"
+    date_str = f"{dt.year}年{dt.month:02d}月{dt.day:02d}日"
     return _check(date_str, output_path)
 
 
@@ -148,6 +148,7 @@ def main():
     parser.add_argument("--until", help="结束日期 (YYYY-MM-DD)")
     parser.add_argument("--force", action="store_true", help="强制覆盖已存在的日报")
     parser.add_argument("--raw", action="store_true", help="输出原始提交数据 (JSON)，由 Claude 进行 AI 汇总")
+    parser.add_argument("--summary", help="AI 汇总后的日报内容（跳过规则式格式化）")
 
     args = parser.parse_args()
 
@@ -214,7 +215,10 @@ def main():
         return
 
     # 格式化日报（规则式，传统模式）
-    report = format_report(since, commits, is_holiday, default_content)
+    if args.summary:
+        report = args.summary
+    else:
+        report = format_report(since, commits, is_holiday, default_content)
 
     print("\n生成的日报内容:")
     print(report)

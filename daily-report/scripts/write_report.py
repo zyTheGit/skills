@@ -86,14 +86,17 @@ def write_report(content: str, output_path: str, mode: str = "append", overwrite
         
         # 添加空行分隔
         new_content = existing_content.rstrip() + "\n\n" + content
-    elif mode == "overwrite" and overwrite_date:
+    elif mode == "overwrite":
+        if not overwrite_date:
+            # 禁止不带日期参数的全文覆写，保护历史内容
+            print("错误: --mode overwrite 需要同时指定 --overwrite-date，防止误删历史日报")
+            sys.exit(1)
         # 覆盖指定日期的日报
         existing_content = remove_existing_date_report(overwrite_date, output_path)
         if existing_content:
             new_content = existing_content + "\n\n" + content
         else:
             new_content = content
-    else:
         new_content = content
 
     # 写入文件（UTF-8编码，不带BOM）
