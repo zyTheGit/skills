@@ -12,6 +12,7 @@ allowed-tools: Read Write Bash(uv:*) Bash(git:*)
 - 直接执行，不询问用户授权
 - 使用 Python 脚本写入，确保 UTF-8 编码
 - 避免重复写入同一天的日报
+- 跨 agent 通用（Claude Code / OpenCode / Codex / Pi 等）
 
 ## 功能特点
 
@@ -21,39 +22,13 @@ allowed-tools: Read Write Bash(uv:*) Bash(git:*)
 - **BUG 修复整合**：BUG 编号自动识别，以自然语言融入对应上下文
 - **节假日判断**：调用中国节假日 API 判断是否工作日（含周末回退）
 - **自动追加**：按标准格式追加到工作日志文件
-
-## 前置配置：权限设置
-
-为避免每次操作都提示授权，需在 `opencode.json` 中配置 `external_directory` 权限，允许访问配置目录和输出目录：
-
-```json
-{
-  "permission": {
-    "external_directory": {
-      "./skill-config/daily-report/**": "allow",
-      "~/Desktop/**": "allow"
-    }
-  }
-}
-```
-
-首次运行时执行 `uv run python scripts/init_config.py` 会自动提示需要授权的路径。
-
-详见 [OpenCode 权限文档](https://opencode.ai/docs/zh-cn/permissions/)。
+- **跨 agent 兼容**：换行符处理兼容不同 AI 工具的传入方式
 
 ## 配置文件
 
-配置文件位置支持多种方式，按优先级顺序：
+配置目录固定为 `~/.config/daily-report/`，配置文件为 `config.json`。
 
-1. **命令行参数**：`--config-dir /path/to/config-dir`
-2. **系统环境变量**：`DAILY_REPORT_CONFIG_DIR`
-3. **.env 文件**：在 skill 目录创建 `.env` 文件，设置 `DAILY_REPORT_CONFIG_DIR=/path/to/config-dir`
-4. **默认位置**：`./skill-config/daily-report/config.json`
-
-**.env 文件示例**（复制自 `.env.example`）：
-```
-DAILY_REPORT_CONFIG_DIR=~/.config/daily-report
-```
+首次运行时执行 `uv run python scripts/init_config.py` 会自动创建默认配置。
 
 配置文件格式：
 
@@ -110,19 +85,60 @@ DAILY_REPORT_CONFIG_DIR=~/.config/daily-report
 ### 手动调用脚本
 
 ```bash
-uv run python scripts/generate_report.py --config-dir /path/to/config-dir --date 2026-04-24 --force
+uv run python scripts/generate_report.py --date 2026-04-24 --force
 ```
 
 ## 工作流程
 
 ### 步骤 1：检查配置文件
 
-按优先级顺序查找配置（CLI 参数 > 环境变量 > .env > 默认路径），加载 JSON 配置文件。
+加载 `~/.config/daily-report/config.json`。
 
 **检查点**：
 - 配置文件是否存在
 - 仓库路径是否有效
 - 输出文件路径是否可写
+
+#### 配置文件不存在时的引导流程
+
+如果配置文件不存在，**不要直接创建默认配置就结束**，而是通过提问式引导用户完成核心配置：
+
+1. **告知用户**：配置文件不存在，需要先配置才能生成日报。配置文件位置为 `~/.config/daily-report/config.json`，也可通过 `uv run python scripts/init_config.py` 初始化默认模板后手动编辑。
+
+2. **依次询问以下关键信息**（使用 AskUserQuestion 工具，一次最多 4 个问题）：
+   - **Git 仓库路径和项目名称**：需要纳入日报的仓库，格式为 `仓库路径 → 显示名称`，支持多个仓库
+   - **Git 作者名称**：用于过滤提交记录，可先执行 `git config --global user.name` 获取当前值供用户确认
+   - **日报输出文件路径**：默认为 `~/Desktop/工作内容.txt`，询问是否需要自定义
+   - **默认日报内容**：无提交记录时的默认内容，默认为"日常工作"
+
+3. **根据用户回答生成配置文件**：调用 `init_config.py` 创建默认配置后，用用户提供的值覆盖对应字段，写入配置文件。
+
+4. **确认配置完成**：告知用户配置文件已创建，并显示配置文件路径和关键配置项摘要，方便后续手动调整。
+
+**示例对话**：
+
+```
+助手：检测到日报配置文件不存在，需要先完成配置才能生成日报。
+     配置文件位置：C:\Users\xxx\.config\daily-report\config.json
+     也可以后续通过编辑该文件手动调整配置。
+
+     请提供以下信息：
+     [AskUserQuestion]
+       Q1: 请提供需要纳入日报的 Git 仓库路径和项目名称（支持多个）
+       Q2: 你的 Git 提交作者名称是什么？（当前全局配置为 xxx）
+       Q3: 日报输出文件路径是否使用默认位置（桌面/工作内容.txt）？
+       Q4: 无提交记录时的默认日报内容？
+     [/AskUserQuestion]
+
+用户：[回答]
+
+助手：配置已完成！
+     配置文件：C:\Users\xxx\.config\daily-report\config.json
+     - 仓库：C:/projects/pms → PMS前端, C:/projects/api → 后端API
+     - 作者：zhangsan
+     - 输出：C:\Users\xxx\Desktop\工作内容.txt
+     后续可随时编辑配置文件调整设置。
+```
 
 ### 步骤 2：获取提交记录
 
@@ -179,7 +195,6 @@ Claude 根据获取到的提交记录，进行以下处理：
 **输出格式**：
 ```
 2026年05月28日
-
 一、进度管理
 1. 完成暂停令、开工令等典表界面优化，统一使用全局预览组件
 2. 修复典表编辑时数据回显异常的 BUG（#3638, #3640），优化表单加载逻辑
@@ -201,9 +216,10 @@ Claude 根据获取到的提交记录，进行以下处理：
 - 文件不存在则自动创建
 - 目录不存在则自动创建
 - 自动处理编码问题
+- 自动统一换行符（兼容不同 agent 传入方式）
 
 ```bash
-uv run python scripts/write_report.py --output /path/to/output --content "2026年05月28日\n\n一、..."
+uv run python scripts/write_report.py --output /path/to/output --content "2026年05月28日\n一、..."
 ```
 
 ## 输出示例
@@ -212,7 +228,6 @@ uv run python scripts/write_report.py --output /path/to/output --content "2026�
 
 ```
 2026年04月10日
-
 一、认证模块
 1. 完成用户登录功能开发，支持手机号/邮箱两种登录方式
 2. 实现用户注册流程，包含表单验证和短信验证码
@@ -229,7 +244,6 @@ uv run python scripts/write_report.py --output /path/to/output --content "2026�
 
 ```
 2026年04月10日
-
 1. 日常工作
 ```
 
@@ -237,7 +251,6 @@ uv run python scripts/write_report.py --output /path/to/output --content "2026�
 
 ```
 2026年04月12日 （加班）
-
 一、数据平台
 1. 完成数据迁移脚本编写，支持增量同步和断点续传
 2. 修复生产环境数据看板统计异常的 BUG，优化查询超时处理
@@ -263,6 +276,12 @@ uv run python scripts/write_report.py --output /path/to/output --content "2026�
 
 API 不可用时自动回退到周末判断，不影响日报生成。
 
+### 换行符兼容
+
+不同 AI 工具传入内容时换行符处理方式不同，`write_report.py` 会自动统一处理：
+- 字面量 `\n` → 真正的换行符
+- 多余空行自动压缩
+
 ## 脚本说明
 
 | 脚本 | 用途 |
@@ -271,10 +290,46 @@ API 不可用时自动回退到周末判断，不影响日报生成。
 | `get_commits.py` | 获取 Git 提交记录 |
 | `check_holiday.py` | 检查节假日状态（API + 周末回退） |
 | `format_report.py` | 格式化日报内容（独立 CLI） |
-| `write_report.py` | 写入日报文件，处理编码和覆盖 |
+| `write_report.py` | 写入日报文件，处理编码和换行兼容 |
 | `init_config.py` | 初始化配置文件 |
+| `query_report.py` | 查询历史日报（按日期/关键词/范围，避免 cat 全文） |
+| `archive_report.py` | 按年归档旧日报（2025及更早→工作内容_2025.txt） |
 
 详细参数和使用方式见 [references/scripts.md](references/scripts.md)。
+
+## 大文件与上下文优化（重要）
+
+日报文件会逐年增长，**严禁直接 `cat` / `read` 整个日报文件**，会占用大量上下文。
+
+### 查询历史日报（推荐方式）
+
+```bash
+# 查某天（自动在 工作内容.txt + 工作内容_2025.txt 中搜索）
+uv run python scripts/query_report.py --date 2026-04-10 --all-files
+
+# 按关键词搜索（最近5条，可 --limit 调整）
+uv run python scripts/query_report.py --keyword 青赔 --limit 5 --all-files
+
+# 范围查询
+uv run python scripts/query_report.py --since 2026-07-01 --until 2026-07-15 --all-files
+
+# 整理某月上班日报（列出日期+星期+加班标记）
+uv run python scripts/query_report.py --month 2026-07 --all-files
+```
+
+### 按年归档
+
+```bash
+uv run python scripts/archive_report.py            # 2025及更早 → 工作内容_2025.txt
+uv run python scripts/archive_report.py --dry-run  # 先预览
+```
+
+归档后主文件只保留当年日报（2026），历史查询走 `query_report.py --all-files`。
+
+### 补充说明
+
+- 主文件已有备份 `工作内容_bak.txt`（归档前完整版）
+- `write_report.py` 的 overwrite 模式只替换指定日期，保留其他历史（已修复重复覆盖 bug）
 
 ## 故障排除
 
@@ -293,4 +348,8 @@ API 不可用时自动回退到周末判断，不影响日报生成。
 
 - 检查配置中的输出路径
 - 确保目录存在且有写入权限
-- 检查是否已配置 `external_directory` 权限
+
+### 换行符显示异常
+
+- `write_report.py` 会自动统一换行符
+- 如果仍有问题，检查 agent 传入的内容是否包含特殊字符

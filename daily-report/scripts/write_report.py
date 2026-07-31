@@ -58,6 +58,32 @@ def remove_existing_date_report(date_str: str, output_path: str) -> str:
         return ""
 
 
+def normalize_newlines(content: str) -> str:
+    """
+    统一换行符处理，兼容不同 agent 传入方式
+
+    不同 agent 传入 \n 的方式不同：
+    - Claude Code 通过 --summary 参数传，\\n 是字面量
+    - OpenCode 可能通过 stdin 传，\\n 是真正的换行符
+    - Codex/Pi 可能又是另一种方式
+
+    策略：先统一为真正的换行符，再清理多余空行
+    """
+    # 如果内容中包含字面量 \\n（两个字符），替换为真正的换行符
+    # 但要避免把已经是真正换行符的内容搞乱
+    # 检测策略：如果字符串中包含 \\n 但不包含真正的换行符，说明是字面量传入
+    if r"\n" in content and "\n" not in content:
+        content = content.replace(r"\n", "\n")
+    # 如果同时包含真正的换行符和字面量 \\n，只替换字面量
+    elif r"\n" in content:
+        content = content.replace(r"\n", "\n")
+
+    # 清理多余空行（3个以上连续换行压缩为2个）
+    content = re.sub(r'\n{3,}', '\n\n', content)
+
+    return content
+
+
 def write_report(content: str, output_path: str, mode: str = "append", overwrite_date: str = None) -> None:
     """
     写入日报到输出文件
@@ -69,6 +95,9 @@ def write_report(content: str, output_path: str, mode: str = "append", overwrite
         overwrite_date: 要覆盖的日期（如果 mode 是 overwrite）
     """
     output_file = Path(output_path)
+
+    # 统一换行符处理
+    content = normalize_newlines(content)
 
     # 确保目录存在
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -92,12 +121,12 @@ def write_report(content: str, output_path: str, mode: str = "append", overwrite
             print("错误: --mode overwrite 需要同时指定 --overwrite-date，防止误删历史日报")
             sys.exit(1)
         # 覆盖指定日期的日报
+        # 保留该日期之外的历史内容，仅覆盖指定日期的日报
         existing_content = remove_existing_date_report(overwrite_date, output_path)
         if existing_content:
             new_content = existing_content + "\n\n" + content
         else:
             new_content = content
-        new_content = content
 
     # 写入文件（UTF-8编码，不带BOM）
     output_file.write_text(new_content, encoding="utf-8")
@@ -123,8 +152,8 @@ def main():
         sys.exit(0 if exists else 1)
 
     if args.content:
-        # 处理命令行传入的 \n 字符，将其转换为真正的换行符
-        content = args.content.replace("\\n", "\n")
+        # 换行符由 normalize_newlines 统一处理，此处直接传入
+        content = args.content
     elif args.file:
         content = Path(args.file).read_text(encoding="utf-8")
     else:

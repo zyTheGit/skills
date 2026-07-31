@@ -3,7 +3,6 @@
 """自动化生成日报 - 统一入口脚本"""
 
 import argparse
-import os
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -17,40 +16,8 @@ if sys.platform == "win32":
 
 
 def discover_config_dir() -> Path:
-    """自动发现配置目录（优先级：--config-dir > .env > 默认路径）"""
-    # 2. 从 .env 文件读取
-    skill_dir = Path(__file__).resolve().parent.parent
-    env_file = skill_dir / ".env"
-    if env_file.exists():
-        config_dir = _read_env_config_dir(env_file)
-        if config_dir:
-            return Path(config_dir)
-
-    # 2. 从系统环境变量读取
-    env_val = os.environ.get("DAILY_REPORT_CONFIG_DIR")
-    if env_val:
-        return Path(env_val)
-
-    # 3. 默认路径
-    return Path.home() / ".config" / "opencode" / "skill-config" / "daily-report"
-
-
-def _read_env_config_dir(env_file: Path) -> str | None:
-    """从 .env 文件读取 DAILY_REPORT_CONFIG_DIR"""
-    try:
-        for line in env_file.read_text(encoding="utf-8").splitlines():
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            if "=" in line:
-                key, _, value = line.partition("=")
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-                if key == "DAILY_REPORT_CONFIG_DIR":
-                    return value
-    except Exception:
-        pass
-    return None
+    """获取配置目录（固定路径：~/.config/daily-report/）"""
+    return Path.home() / ".config" / "daily-report"
 
 
 def load_config(config_dir: Path) -> dict:

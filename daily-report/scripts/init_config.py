@@ -7,8 +7,8 @@ from pathlib import Path
 
 
 def get_default_config_dir() -> Path:
-    """获取默认配置目录"""
-    return Path.home() / ".config" / "opencode" / "skill-config" / "daily-report"
+    """获取默认配置目录（固定路径：~/.config/daily-report/）"""
+    return Path.home() / ".config" / "daily-report"
 
 
 def get_default_config() -> dict:
@@ -50,27 +50,18 @@ def init_config(config_dir: Path | None = None) -> Path:
 
 
 def _print_permission_hint(config_dir: Path, output_file: str) -> None:
-    """输出权限配置建议"""
-    import platform
-
+    """输出配置提示"""
     config_str = str(config_dir).replace("\\", "/")
     output_parent = str(Path(output_file).parent).replace("\\", "/")
 
     hint = f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-为避免每次生成日报时提示授权，建议在 opencode.json
-的 permission 中添加 external_directory 配置：
+配置文件已创建，请编辑设置仓库路径（repos）和作者名称（author）。
 
-{{
-  "permission": {{
-    "external_directory": {{
-      "{config_str}/**": "allow",
-      "{output_parent}/**": "allow"
-    }}
-  }}
-}}
+配置目录: {config_str}
+输出目录: {output_parent}
 
-详见: https://opencode.ai/docs/zh-cn/permissions/
+如需授权访问，请在对应 agent 的配置中添加目录权限。
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
     print(hint)

@@ -319,7 +319,10 @@ def format_report(
 
     for idx, (repo_name, categories) in enumerate(grouped.items()):
         numeral = cn_numerals[idx] if idx < len(cn_numerals) else str(idx + 1)
-        lines.append(f"\n{numeral}、{repo_name}")
+        # 项目之间保留空行，日期行后无空行
+        if idx > 0:
+            lines.append("")
+        lines.append(f"{numeral}、{repo_name}")
 
         sorted_cats = sorted(
             categories.keys(),

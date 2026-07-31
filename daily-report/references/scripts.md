@@ -5,20 +5,21 @@
 自动化日报生成脚本，整合获取提交、节假日检查、格式化、写入全流程。
 
 ```bash
-uv run python scripts/generate_report.py [--config-dir <path>] [--date YYYY-MM-DD] [--force]
+uv run python scripts/generate_report.py [--date YYYY-MM-DD] [--force]
 ```
 
 **参数**：
 
 | 参数 | 必需 | 说明 |
 |------|------|------|
-| `--config-dir` | 否 | 配置目录路径，默认自动发现（.env > 环境变量 > ~/.config/opencode/skill-config/daily-report） |
+| `--config-dir` | 否 | 配置目录路径（默认 `~/.config/daily-report/`） |
 | `--date` | 否 | 指定日期，默认今天 |
 | `--since` / `--until` | 否 | 日期范围（与 --date 二选一） |
 | `--force` | 否 | 强制覆盖已存在的日报 |
+| `--raw` | 否 | 输出原始提交数据 (JSON)，由 AI 进行汇总 |
+| `--summary` | 否 | AI 汇总后的日报内容（跳过规则式格式化） |
 
 **功能**：
-- 自动发现配置目录
 - 获取所有仓库的提交记录
 - 调用节假日 API（含周末回退）
 - 逐条汇总提交内容
@@ -53,7 +54,7 @@ uv run python scripts/get_commits.py --since 2026-04-10 --until 2026-04-10 --rep
 检查节假日状态。
 
 ```bash
-UV run python scripts/check_holiday.py --date 2026-04-10 [--api-url https://...]
+uv run python scripts/check_holiday.py --date 2026-04-10 [--api-url https://...]
 ```
 
 **参数**：
@@ -70,7 +71,7 @@ UV run python scripts/check_holiday.py --date 2026-04-10 [--api-url https://...]
 
 ## format_report.py
 
-格式化日报内容（独立 CL
+格式化日报内容（独立 CLI）。
 
 ```bash
 uv run python scripts/format_report.py --date 2026-04-10 --commits commits.json --is-holiday false
@@ -90,7 +91,7 @@ uv run python scripts/format_report.py --date 2026-04-10 --commits commits.json 
 
 ## write_report.py
 
-写入日报到文件，处理编码和覆盖逻辑。
+写入日报到文件，处理编码和换行兼容。
 
 ```bash
 uv run python scripts/write_report.py --output /path/to/output.txt --content "日报内容"
@@ -107,6 +108,8 @@ uv run python scripts/write_report.py --output /path/to/output.txt --content "�
 | `--overwrite-date` | 否 | 覆盖指定日期的日报 |
 | `--check-date` | 否 | 仅检查日期是否已存在，不写入 |
 
+**换行符兼容**：自动统一不同 agent 传入的换行符格式（字面量 `\n` → 真正的换行符），多余空行自动压缩。
+
 ---
 
 ## init_config.py
@@ -121,5 +124,5 @@ uv run python scripts/init_config.py [--config-dir <path>] [--show]
 
 | 参数 | 必需 | 说明 |
 |------|------|------|
-| `--config-dir` | 否 | 配置目录路径 |
+| `--config-dir` | 否 | 配置目录路径（默认 `~/.config/daily-report/`） |
 | `--show` | 否 | 显示当前配置（不初始化） |
